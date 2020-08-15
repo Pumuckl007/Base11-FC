@@ -68,7 +68,7 @@ public class FramedCommandDispatcherTest {
     CommandDispatcher                framedCommandDispatcher = new CommandDispatcher(null);
     String                           commandString           = "CD";
     StringCommand                    testCommand             = new StringCommand("Test");
-    CommandDispatcher.CommandFactory factory                 = info -> testCommand;
+    CommandDispatcher.CommandFactory factory                 = StringCommand::new;
 
     framedCommandDispatcher.registerFramedCommandFactory(commandString, factory);
 
@@ -84,7 +84,7 @@ public class FramedCommandDispatcherTest {
     CommandDispatcher.CommandFactory factory                 = info -> testCommand;
 
     framedCommandDispatcher.registerFramedCommandFactory(commandString, factory);
-    framedCommandDispatcher.registerFramedCommandFactory(commandString, info -> new StringCommand(info));
+    framedCommandDispatcher.registerFramedCommandFactory(commandString, StringCommand::new);
 
     CommandDispatcher.CommandFactory actualFactory = framedCommandDispatcher.getFactoryForCommand(commandString);
     StringCommand                    actualCommand = (StringCommand) actualFactory.getCommand("Test");
@@ -96,7 +96,7 @@ public class FramedCommandDispatcherTest {
     FakeCommandScheduler fakeCommandScheduler    = new FakeCommandScheduler();
     CommandDispatcher    framedCommandDispatcher = new CommandDispatcher(fakeCommandScheduler);
     String               commandString           = "EF";
-    framedCommandDispatcher.registerFramedCommandFactory(commandString, info -> new StringCommand(info));
+    framedCommandDispatcher.registerFramedCommandFactory(commandString, StringCommand::new);
     framedCommandDispatcher.processFramedPacket("EF|Test");
     StringCommand newCommand = (StringCommand) fakeCommandScheduler.lastCommand;
     assertEquals("Test", newCommand.paramString);
@@ -107,7 +107,7 @@ public class FramedCommandDispatcherTest {
     FakeCommandScheduler fakeCommandScheduler    = new FakeCommandScheduler();
     CommandDispatcher    framedCommandDispatcher = new CommandDispatcher(fakeCommandScheduler);
     String               commandString           = "ABC";
-    framedCommandDispatcher.registerFramedCommandFactory(commandString, info -> new StringCommand(info));
+    framedCommandDispatcher.registerFramedCommandFactory(commandString, StringCommand::new);
     framedCommandDispatcher.processFramedPacket("ABC|Hello World");
     StringCommand newCommand = (StringCommand) fakeCommandScheduler.lastCommand;
     assertEquals("Hello World", newCommand.paramString);
@@ -127,7 +127,7 @@ public class FramedCommandDispatcherTest {
     SCMPacketType        type                    = SCMPacketType.DD;
     SCMPacket            packet                  = new SCMPacket(type, "Hello");
 
-    framedCommandDispatcher.registerFramedCommandFactory(type, info -> new StringCommand(info));
+    framedCommandDispatcher.registerFramedCommandFactory(type, StringCommand::new);
 
     framedCommandDispatcher.onPacket(PacketDirection.RECIVE, packet);
     StringCommand newCommand = (StringCommand) fakeCommandScheduler.lastCommand;
@@ -175,7 +175,7 @@ public class FramedCommandDispatcherTest {
     String               framedSCM               = "F1|Quantum";
     String               framedSCM2              = "F2|Encabulator";
 
-    framedCommandDispatcher.registerFramedCommandFactory(type, info -> new StringCommand(info));
+    framedCommandDispatcher.registerFramedCommandFactory(type, StringCommand::new);
     framedCommandDispatcher.registerFramedCommandFactory(type2, info -> new StringCommand(info + "2"));
     framedCommandDispatcher.registerFramedCommandFactory("F1", info -> new StringCommand(info + "3"));
     framedCommandDispatcher.registerFramedCommandFactory("F2", info -> new StringCommand(info + "4"));
