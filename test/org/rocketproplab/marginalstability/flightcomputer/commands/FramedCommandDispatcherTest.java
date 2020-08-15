@@ -9,8 +9,6 @@ import org.rocketproplab.marginalstability.flightcomputer.comm.SCMPacket;
 import org.rocketproplab.marginalstability.flightcomputer.comm.SCMPacketType;
 import org.rocketproplab.marginalstability.flightcomputer.subsystems.Subsystem;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class FramedCommandDispatcherTest {
 
   private class StringCommand implements Command {
@@ -142,7 +140,7 @@ public class FramedCommandDispatcherTest {
     SCMPacket            packet                  = new SCMPacket(type, "Hello");
 
     framedCommandDispatcher.registerFramedCommandFactory(type, info -> {
-      throw new NotImplementedException();
+      throw new RuntimeException("Not implement yet");
     });
 
     framedCommandDispatcher.onPacket(PacketDirection.SEND, packet);
@@ -157,7 +155,7 @@ public class FramedCommandDispatcherTest {
     SCMPacket            packet                  = new SCMPacket(SCMPacketType.ER, "Hello");
 
     framedCommandDispatcher.registerFramedCommandFactory(type, info -> {
-      throw new NotImplementedException();
+      throw new RuntimeException("Not implement yet");
     });
 
     framedCommandDispatcher.onPacket(PacketDirection.RECIVE, packet);
